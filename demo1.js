@@ -1,0 +1,54 @@
+const express = require("express");
+const nodemailer = require("nodemailer");
+const bodyParser = require("body-parser");
+const cors = require("cors");
+require("dotenv").config();
+
+const app = express();
+app.use(cors());
+app.use(bodyParser.json());
+
+let otpStore = {};
+
+app.post("/send-otp", async (req, res) => {
+  const { email } = req.body;
+  console.log(email);
+  const otp = Math.floor(100000 + Math.random() * 900000);
+  otpStore[email] = otp;
+
+  const transporter = nodemailer.createTransport({
+    host: "smtp.gmail.com",
+    port: 587,
+    secure: false,
+    auth: {
+      user: "dattapadre7249@gmail.com",
+      pass: "ibip cill mvek iypo",
+    },
+  });
+
+  const mailOptions = {
+    from: "dattapadre7249@gmail.com",
+    to: email,
+    subject: "Your OTP Code",
+    text: `Your OTP is ${otp}`,
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+    res.json({ success: true, message: "OTP sent successfully", data: email });
+  } catch (error) {
+    res.json({ success: false, message: "Failed to send OTP", error });
+  }
+});
+
+app.post("/verify-otp", (req, res) => {
+  const { email, otp } = req.body;
+  if (otpStore[email] && otpStore[email] == otp) {
+    delete otpStore[email];
+    res.json({ success: true, message: "OTP verified successfully!" });
+  } else {
+    res.json({ success: false, message: "Invalid OTP" });
+  }
+});
+
+app.listen(process.env.PORT || 5000);
