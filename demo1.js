@@ -10,6 +10,10 @@ app.use(bodyParser.json());
 
 let otpStore = {};
 
+app.get("/",function(req,res){
+  res.send("Data")
+})
+
 app.post("/send-otp", async (req, res) => {
   const { email } = req.body;
   console.log(email);
