@@ -2,6 +2,7 @@ const express = require("express");
 const nodemailer = require("nodemailer");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+const exe = require("./conn");
 
 const app = express();
 app.use(cors());
@@ -53,5 +54,14 @@ app.post("/verify-otp", (req, res) => {
     res.json({ success: false, message: "Invalid OTP" });
   }
 });
+
+app.post("/registration",async function(req,res){
+  console.log("data")
+  var d = req.body;
+  var sql = `INSERT INTO users (username, usermobile, useremail, password) VALUES (?, ?, ?, ?)`;
+  var data = await exe(sql, [d.username, d.usermobile, d.useremail, d.password]);
+  res.json({ success: true, message: "Registration successfully!" });
+});
+
 
 app.listen(5000);

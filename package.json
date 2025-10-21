@@ -9,8 +9,10 @@
     "mogoose": "^0.0.1-security",
     "mongodb": "^6.20.0",
     "mongoose": "^8.19.1",
+    "mysql": "^2.18.1",
     "nodemailer": "^7.0.9",
-    "twilio": "^5.10.3"
+    "twilio": "^5.10.3",
+    "util": "^0.12.5"
   },
   "name": "a_backend",
   "version": "1.0.0",
