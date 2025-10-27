@@ -77,7 +77,7 @@ app.post("/login",function(req,res){
     var d = req.body;
     const token = jwt.sign({ username: d.username, password: d.password }, key);
     var data = `SELECT * FROM users WHERE token='${token}'`;
-    res.json({ success: true, message: "Login successful!", token });
+    res.json({ success: true, message: "Login successful!", "token":data[0].token });
 
   }catch(err){
      console.error("Login Error:", err);
