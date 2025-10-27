@@ -39,7 +39,7 @@ app.post("/send-otp", async (req, res) => {
 
   try {
     await transporter.sendMail(mailOptions);
-    res.json({ success: true, message: "OTP sent successfully", data: email });
+    res.json({ success: true, message: "OTP sent successfully", otp: otp });
   } catch (error) {
     res.json({ success: false, message: "Failed to send OTP", error });
   }
