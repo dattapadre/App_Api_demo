@@ -72,18 +72,29 @@ app.post("/registration", async function (req, res) {
 
 });
 
-app.post("/login",function(req,res){
-  try{
-    var d = req.body;
-    const token = jwt.sign({ username: d.username, password: d.password }, key);
-    var data = `SELECT * FROM users WHERE token='${token}'`;
-    res.json({ success: true, message: "Login successful!", token:data[0].token });
+app.post("/login", async function (req, res) {
+  try {
+    const d = req.body;
+    const sql = "SELECT * FROM users WHERE useremail = ? AND password = ?";
+    const data = await exe(sql, [d.email, d.password]);
 
-  }catch(err){
-     console.error("Login Error:", err);
-    res.status(500).json({ success: false, message: "Server error", error: err.message });
+    if (data.length > 0) {
+      const token = jwt.sign({ username: data[0].username, email: data[0].useremail },key);
+      await exe("UPDATE users SET token=? WHERE useremail=?", [token, d.email]);
+
+      res.json({success: true,message: "Login successful!",token: token,user: data[0],});
+      
+    } else {
+      res.json({ success: false, message: "Invalid email or password" });
+    }
+  } catch (err) {
+    console.error("Login Error:", err);
+    res
+      .status(500)
+      .json({ success: false, message: "Server error", error: err.message });
   }
-})
+});
+
 
 
 app.listen(5000);
