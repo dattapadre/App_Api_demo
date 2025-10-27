@@ -69,8 +69,21 @@ app.post("/registration", async function (req, res) {
     console.error("Registration Error:", err);
     res.status(500).json({ success: false, message: "Server error", error: err.message });
   }
-  
+
 });
+
+app.post("/login",function(req,res){
+  try{
+    var d = req.body;
+    const token = jwt.sign({ username: d.username, password: d.password }, key);
+    var data = `SELECT * FROM users WHERE token='${token}'`;
+    res.json({ success: true, message: "Login successful!", token });
+
+  }catch(err){
+     console.error("Login Error:", err);
+    res.status(500).json({ success: false, message: "Server error", error: err.message });
+  }
+})
 
 
 app.listen(5000);
