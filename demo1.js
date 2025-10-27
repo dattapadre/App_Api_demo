@@ -61,7 +61,7 @@ app.post("/registration",async function(req,res){
   var d = req.body;
   var token = jwt.sign({username:d.username,password:d.password},key)
   var sql = `INSERT INTO users (username, usermobile, useremail, password) VALUES (?, ?, ?, ?,?)`;
-  var data = await exe(sql, [d.username, d.mobile, d.email, d.password,token]);
+  // var data = await exe(sql, [d.username, d.mobile, d.email, d.password,token]);
   res.json({ success: true, message: "Registration successfully!" });
 });
 
