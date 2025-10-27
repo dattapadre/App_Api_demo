@@ -3,6 +3,8 @@ const nodemailer = require("nodemailer");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const exe = require("./conn");
+const jwt = require("jsonwebtoken");
+const key = "sdfghjkl"
 
 const app = express();
 app.use(cors());
@@ -56,10 +58,10 @@ app.post("/verify-otp", (req, res) => {
 });
 
 app.post("/registration",async function(req,res){
-  console.log("data")
   var d = req.body;
-  var sql = `INSERT INTO users (username, usermobile, useremail, password) VALUES (?, ?, ?, ?)`;
-  var data = await exe(sql, [d.username, d.usermobile, d.useremail, d.password]);
+  var token = jwt.sign({username:d.username,password:d.password},key)
+  var sql = `INSERT INTO users (username, usermobile, useremail, password) VALUES (?, ?, ?, ?,?)`;
+  var data = await exe(sql, [d.username, d.mobile, d.email, d.password,token]);
   res.json({ success: true, message: "Registration successfully!" });
 });
 
